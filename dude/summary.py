@@ -63,7 +63,7 @@ def summarize_one(cfg, s, experiments, backend,
         else:
             space = utils.groupBy(elements, optspace)
 
-        oFile = cfg.sum_output_dir + '/' + core.get_name(name, group)
+        oFile = os.path.join(cfg.sum_output_dir, core.get_name(name, group))
 
         # prepare columns and sizes for print
         other_cols = ["entries", "files"]
@@ -85,20 +85,17 @@ def summarize_one(cfg, s, experiments, backend,
 
         # write header
         if is_new(s):
-            header = ''
             # get one point and look the dimensions
             (point, samples) = space[0]
             header = s.header(point.keys())
             if header:
                 f.write_header(header)
         elif 'header' in s:
-            header = ""
             # get one point and look the dimensions
             (point, samples) = space[0]
             dims = point.keys()
             dims.sort()
-            for d in dims:
-                header += d + ' '
+            header = ' '.join(dims) + ' '
 
             header = s['header'](header)
             f.write_header(header)
@@ -119,7 +116,7 @@ def summarize_one(cfg, s, experiments, backend,
                     if is_new(s):
                         s.visit(point, outf, f)
                     else:
-                        s['process'](point, outf, f, wd + '/' + cfg.sum_output_dir)
+                        s['process'](point, outf, f, os.path.join(wd, cfg.sum_output_dir))
                     outf.close()
                     os.chdir(wd)
         f.close()
