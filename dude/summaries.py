@@ -40,7 +40,7 @@ class SummaryBase:
 
     def format(self, optpt, *args):
         #assert len(values.split(' ')) == len(self.header.split(' '))
-        keys = optpt.keys()
+        keys = list(optpt.keys())
         keys.sort()
         s = ' '.join([str(optpt[k]) for k in keys] + [str(arg) for arg in args])
         return s
@@ -68,7 +68,7 @@ class LineSelect(SummaryBase):
         re_prog = re.compile(self.regex)
         for l in stdout.readlines():
             if re_prog.match(l):
-                print >>group_out, self.format(optpt, self.split(l[:-1]))
+                print(self.format(optpt, self.split(l[:-1])), file=group_out)
 
 class FilesLineSelect(SummaryBase):
     """
@@ -105,7 +105,7 @@ class FilesLineSelect(SummaryBase):
             files = [f for fg in files for f in fg] # flatten
 
         #if not self.quiet:
-        print "FilesLineSelect using files ", files
+        print("FilesLineSelect using files ", files)
         re_prog = re.compile(self.regex)
 
         for fn in files:
@@ -118,7 +118,7 @@ class FilesLineSelect(SummaryBase):
                     skip -= 1
                 else:
                     if re_prog.match(l):
-                        print >>group_out, self.format(optpt, fname_split + ' ' + self.split(l[:-1]))
+                        print(self.format(optpt, fname_split + ' ' + self.split(l[:-1])), file=group_out)
             f.close()
 
 class MultiLineSelect(SummaryBase):
@@ -158,7 +158,7 @@ class MultiLineSelect(SummaryBase):
 
             complete = not (None in v)
             if complete:
-                print >>group_out, self.format(optpt, " ".join(v))
+                print(self.format(optpt, " ".join(v)), file=group_out)
                 v = []
 
 class FilesMultiLineSelect(SummaryBase):
@@ -192,7 +192,7 @@ class FilesMultiLineSelect(SummaryBase):
             files = [f for fg in files for f in fg] # flatten
 
         if not self.quiet():
-            print "FilesMultiLineSelect using files ", files
+            print("FilesMultiLineSelect using files ", files)
 
         for fn in files:
             f = open(fn)
@@ -215,7 +215,7 @@ class FilesMultiLineSelect(SummaryBase):
 
                 complete = not (None in v)
                 if complete:
-                    print >>group_out, self.format(optpt, ' '.join([fname_split] + v))
+                    print(self.format(optpt, ' '.join([fname_split] + v)), file=group_out)
                     v = []
             f.close()
 
@@ -244,7 +244,7 @@ class JsonSelect(SummaryBase):
     def visit(self, optpt, stdout, group_out):
         if os.path.exists(self.filename):
             if not self.quiet():
-                print "JsonSelect:", optpt
+                print("JsonSelect:", optpt)
             f = open(self.filename)
             jobj = json.load(f)
 
@@ -257,7 +257,7 @@ class JsonSelect(SummaryBase):
 
             s = self.format(optpt, *objs)
 
-            keys = optpt.keys()
+            keys = list(optpt.keys())
             keys.sort()
             s = ''
             for k in keys:

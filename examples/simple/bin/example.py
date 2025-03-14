@@ -24,15 +24,15 @@ def foo(a, b, c):
         #time.sleep(20)
         res = b-c
     else:
-        print "Argument 1 not supported"
+        print("Argument 1 not supported")
         sys.exit(-1)
 
     return res
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print "Wrong number of arguments"
+        print("Wrong number of arguments")
         sys.exit(0)
 
     # print result
-    print ':> ', foo(sys.argv[1], sys.argv[2], sys.argv[3])
+    print((':> ', foo(sys.argv[1], sys.argv[2], sys.argv[3])))

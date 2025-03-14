@@ -9,16 +9,16 @@ class UtilsTestCase(unittest.TestCase):
         #self.assertEquals(len(dude.utils.cartesian({})), 0)
         optspace = {'a' : [1, 2]}
         result = [{'a' : 1}, {'a' : 2}]
-        self.assertEquals(dude.utils.cartesian(optspace), result)
+        self.assertEqual(dude.utils.cartesian(optspace), result)
         optspace = {'a' : [1, 2], 'b' : [1, 2]}
         result = [{'a' : 1, 'b' : 1}, {'a' : 1, 'b' : 2},
                   {'a' : 2, 'b' : 1}, {'a' : 2, 'b' : 2}]
-        self.assertEquals(dude.utils.cartesian(optspace), result)
+        self.assertEqual(dude.utils.cartesian(optspace), result)
 
     def test_parse_value(self):
-        self.assertEquals(type(dude.utils.parse_value(' 1')), int)
-        self.assertEquals(dude.utils.parse_value(' a '), 'a')
+        self.assertEqual(type(dude.utils.parse_value(' 1')), int)
+        self.assertEqual(dude.utils.parse_value(' a '), 'a')
 
     def test_parse_str_list(self):
-        self.assertEquals(dude.utils.parse_str_list('[1,2,3]'),
+        self.assertEqual(dude.utils.parse_str_list('[1,2,3]'),
                           [1, 2, 3])

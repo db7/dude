@@ -3,7 +3,7 @@
 # See accompanying file LICENSE
 
 """ """
-import core
+from . import core
 import shutil
 import os
 import sys
@@ -19,5 +19,5 @@ def visit_cmd_experiments(cfg, experiments, cmd):
     for experiment in experiments:
         folder = core.get_folder(cfg, experiment)
         if os.path.exists(folder):
-            print "Executing \"%s\" in %s" % (cmd, folder)
+            print(("Executing \"%s\" in %s" % (cmd, folder)))
             visit_cmd_experiment(folder, cmd)

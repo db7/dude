@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Dude'
+project = 'Dude'
 copyright = __copyright__ + ' ' + __author__
 
 # The version info for the project you're documenting, acts as replacement for
@@ -184,8 +184,8 @@ htmlhelp_basename = 'Dudedoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Dude.tex', u'Dude Documentation',
-   u'Diogo Becker', 'manual'),
+  ('index', 'Dude.tex', 'Dude Documentation',
+   'Diogo Becker', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -217,8 +217,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'dude', u'Dude Documentation',
-     [u'Diogo Becker'], 1)
+    ('index', 'dude', 'Dude Documentation',
+     ['Diogo Becker'], 1)
 ]
 
 # -- Options for Texinfo output ------------------------------------------------
@@ -227,7 +227,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Dude', u'Dude Documentation', u'Diogo Becker',
+  ('index', 'Dude', 'Dude Documentation', 'Diogo Becker',
    'Dude', 'One line description of project.', 'Miscellaneous'),
 ]
 

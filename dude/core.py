@@ -12,7 +12,7 @@ import fcntl
 import os
 import sys
 
-import utils
+from . import utils
 
 ### some constants ####
 SEP = '__'
@@ -59,7 +59,7 @@ def get_name(prefix, optpt):
     experiment.
     """
     s = prefix
-    l = optpt.keys()
+    l = list(optpt.keys())
     l.sort()
     for k in l:
         s += SEP + k
@@ -146,7 +146,7 @@ def get_failed(cfg, experiments, missing = False):
         try:
             val = int(f.readline())
         except ValueError: # there's no number to read
-            print "no status for " + sFile
+            print(("no status for " + sFile))
             return False
         finally:
             f.close()
@@ -273,7 +273,7 @@ def check_cfg(cfg):
     assert hasattr(cfg, 'raw_output_dir')
 
     if hasattr(cfg, 'runs'):
-        print "WARNING: runs is DEPRECATED. IGNORED"
+        print("WARNING: runs is DEPRECATED. IGNORED")
 
     # TODO remove
     if not hasattr(cfg, 'timeout'):

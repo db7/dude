@@ -160,7 +160,7 @@ select name, sql from sqlite_master where type=\'table\' and name=?;''',
 registry = { 'file' : FileSumBackend, 'json' : JsonSumBackend, 'sqlite3' : Sqlite3SumBackend }
 
 def backend_names():
-    return registry.keys()
+    return list(registry.keys())
 
 def backend_constructor(backend_name):
     return registry[backend_name]

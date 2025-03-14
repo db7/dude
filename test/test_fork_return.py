@@ -10,7 +10,7 @@ class OtherMockFork:
         self.ret = ret
 
     def fork_exp(self, optpt):
-        print "mock"
+        print("mock")
         time.sleep(self.sleep)
         return self.ret
 
@@ -21,7 +21,7 @@ class OtherMockForkExc:
         self.sleep = sleep
 
     def fork_exp(self, optpt):
-        print "mock"
+        print("mock")
         time.sleep(self.sleep)
         raise Exception("error")
 

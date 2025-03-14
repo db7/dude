@@ -10,6 +10,9 @@
 
 import sys
 
-if __name__ == '__main__':
+def main():
     import dude
     sys.exit(dude.cmdline.main(sys.argv[1:]))
+
+if __name__ == '__main__':
+    main()

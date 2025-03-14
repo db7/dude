@@ -4,15 +4,15 @@
 
 """Manages the execution of experiments"""
 
-import core
+from . import core
 import traceback
-import info
+from . import info
 import os
 import signal
 import subprocess
 import sys
 import time
-import utils
+from . import utils
 import errno
 from threading import Timer
 
@@ -35,8 +35,8 @@ class SpawnProcess:
     def kill(self):
         try:
             os.killpg(self.proc.pid, signal.SIGKILL)
-        except OSError, e:
-            print "Ignoring exception:", e
+        except OSError as e:
+            print("Ignoring exception:", e)
         self.status = self.proc.wait()
 
     def poll(self):
@@ -106,20 +106,20 @@ class ForkProcess:
         sys.stderr = self.stderr
 
         ret = 1
-        print "dude: child start", os.getpid()
+        print("dude: child start", os.getpid())
         try:
             ret = self.func(self.optpt)
-            print "dude: child exit", ret
-        except KeyboardInterrupt, e:
+            print("dude: child exit", ret)
+        except KeyboardInterrupt as e:
             #print "Cought keyboard interrupt in child"
             os._exit(3) ## keyinterrupt or timeout
-        except Exception, e:
-            print "Exception in fork_cmd:"
-            print '#'*60
-            print "", e
-            print '~'*60
+        except Exception as e:
+            print("Exception in fork_cmd:")
+            print('#'*60)
+            print("", e)
+            print('~'*60)
             traceback.print_exc(file=sys.stdout)
-            print '#'*60
+            print('#'*60)
             sys.stdout.flush()
             sys.stderr.flush()
             os._exit(2)
@@ -178,7 +178,7 @@ def execute_one(cfg, optpt, stdout, stderr):
             # manually.
             signal.signal(signal.SIGINT,
                           lambda num, frame: kill_proc(cfg, proc, True))
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt as e:
             #print "Cought keyboard interrupt"
             kill_proc(cfg, proc, True) # True == terminate dude
             assert False, "Never reach this line"
@@ -194,7 +194,7 @@ def execute_one(cfg, optpt, stdout, stderr):
             if proc.poll():
                 retcode = proc.status
                 info.print_elapsed(timeout, elapsed)
-                print
+                print()
                 break
 
             time.sleep(0.01 if elapsed < 5 else 5.0)
@@ -264,7 +264,7 @@ def execute_isolated(cfg, optpt, folder, show_output = False):
 
         status = execute_one(cfg, optpt, fout, fout)
         if status != 0:
-            print 'command returned error value: %d' % status
+            print('command returned error value: %d' % status)
 
     finally:
         if fout: fout.close()
@@ -290,7 +290,7 @@ def execute_isolated(cfg, optpt, folder, show_output = False):
                 sys.stderr = sys.__stderr__
 
         f = open(core.statusFile,'w')
-        print >>f, status
+        print(status, file=f)
         f.close()
 
         # unlock experiment
@@ -330,10 +330,10 @@ def run(cfg, experiments, options):
         try:
             sys.stdout = sys.stderr = f
             cfg.prepare_global()
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt as e:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
-            print "Interrupted on prepare_global()"
+            print("Interrupted on prepare_global()")
             sys.exit(1)
         finally:
             if f: f.close()
@@ -365,7 +365,7 @@ def run(cfg, experiments, options):
                 info.print_run(actual_runs, status, etime)
                 executed_runs += 1
             else:
-                print '<-> skipping'
+                print('<-> skipping')
 
             # Add elapsed time to mean object
             elapsed_time.add(etime)
@@ -387,10 +387,10 @@ def run(cfg, experiments, options):
         try:
             sys.stdout = sys.stderr = f
             cfg.finish_global()
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt as e:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
-            print "Interrupted on prepare_global()"
+            print("Interrupted on prepare_global()")
             sys.exit(1)
         finally:
             if f: f.close()

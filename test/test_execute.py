@@ -9,7 +9,7 @@ class MockFork:
         self.sleep = sleep
 
     def fork_exp(self, optpt):
-        print "mock"
+        print("mock")
         time.sleep(self.sleep)
 
 class MockCmdl:
@@ -26,8 +26,8 @@ def mock_dude(mock, f):
     try:
         s = ex.execute_one(mock, {}, f, f)
         if s != 0: sys.exit(1)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         sys.exit(1)
 
 def init_mock(mock):

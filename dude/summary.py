@@ -9,10 +9,10 @@ processing them, and writting the summaries out.
 
 import os
 
-import core
-import summary_backends
-import summaries
-import utils
+from . import core
+from . import summary_backends
+from . import summaries
+from . import utils
 
 def is_new(summary):
     return isinstance(summary, summaries.SummaryBase)
@@ -25,7 +25,7 @@ def summarize_one(cfg, s, experiments, backend,
     if is_new(s):
         groupby    = s.groupby()
         name       = s.name()
-        dimensions = cfg.optspace.keys()
+        dimensions = list(cfg.optspace.keys())
     else:
         groupby    = s['groupby']
         name       = s['name']
@@ -41,12 +41,12 @@ def summarize_one(cfg, s, experiments, backend,
     # save working directory
     wd = os.getcwd()
 
-    print
-    print "Summary:", name
+    print()
+    print(("Summary:", name))
 
     # for each group, call process of s
     for (group, elements) in groups:
-        print "Group: ", group, " entries:", len(elements)
+        print(("Group: ", group, " entries:", len(elements)))
         optspace = {}
 
         for i in dimensions:
@@ -70,15 +70,15 @@ def summarize_one(cfg, s, experiments, backend,
         cols = dimensions + other_cols
         cols_sz = []
         for dimension in dimensions:
-            lengths = map(lambda x: len(str(x)), optspace[dimension])
+            lengths = [len(str(x)) for x in optspace[dimension]]
             lengths.append(len(dimension))
             cols_sz.append(max(lengths))
-        cols_sz += map(len, other_cols)
+        cols_sz += list(map(len, other_cols))
 
         # print column titles
-        print '-'*(sum(cols_sz)+len(cols_sz))
-        print utils.strColumns(cols, cols_sz)
-        print '-'*(sum(cols_sz)+len(cols_sz))
+        print(('-'*(sum(cols_sz)+len(cols_sz))))
+        print((utils.strColumns(cols, cols_sz)))
+        print(('-'*(sum(cols_sz)+len(cols_sz))))
 
         # open file for group
         f = summary_backends.backend_constructor(backend)(oFile, dimensions)
@@ -87,13 +87,13 @@ def summarize_one(cfg, s, experiments, backend,
         if is_new(s):
             # get one point and look the dimensions
             (point, samples) = space[0]
-            header = s.header(point.keys())
+            header = s.header(list(point.keys()))
             if header:
                 f.write_header(header)
         elif 'header' in s:
             # get one point and look the dimensions
             (point, samples) = space[0]
-            dims = point.keys()
+            dims = list(point.keys())
             dims.sort()
             header = ' '.join(dims) + ' '
 
@@ -151,7 +151,7 @@ def summarize(cfg, experiments, sel = [], backend = 'file',
                 sel.remove(summary['name'])
 
     for s in sel:
-        print s, "not valid"
+        print((s, "not valid"))
 
 def check_cfg(cfg):
     assert hasattr(cfg, 'dude_version')

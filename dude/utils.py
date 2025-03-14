@@ -14,7 +14,7 @@ def cartesian(sets):
 
 # result = __cartesian(sets, 0, {})
 def __cartesian(sets, i, element):
-    keys = sets.keys()
+    keys = list(sets.keys())
     if i == len(keys):
         return [element.copy()]
     else:
@@ -43,7 +43,7 @@ def groupBy(measurements, options):
     return subsets
 
 def __groupByRecursiveFor(d, i, options, set, subsets):
-    keys = d.keys()
+    keys = list(d.keys())
     if i == len(keys):
         subsets.append((options.copy(), getSubset(set, options)))
     else:
@@ -59,7 +59,7 @@ def getSubset(set, options):
     return subset
 
 def matchLeft(left, right):
-    for k in right.keys():
+    for k in list(right.keys()):
         if str(left[k]) != str(right[k]):
             return False
     return True
@@ -74,7 +74,7 @@ def select(options, selection):
 def unselect(options, unselection):
     s = {}
     assert type(unselection) == list
-    for k in options.keys():
+    for k in list(options.keys()):
         if k not in unselection:
             s[k] = options[k]
     return s

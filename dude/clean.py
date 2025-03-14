@@ -3,24 +3,24 @@
 # See accompanying file LICENSE
 
 """ """
-import core
+from . import core
 import shutil
 import os
 import glob
-import dimensions
-import utils
+from . import dimensions
+from . import utils
 
 def clean_experiments(cfg, experiments):
     for experiment in experiments:
         folder = core.get_folder(cfg, experiment)
-        print "Cleaning", folder
+        print(("Cleaning", folder))
         if os.path.exists(folder):
             shutil.rmtree(folder)
 
 def clean_experiment(folder):
     status_file = os.path.join(folder, 'dude.status')
     if os.path.exists(status_file):
-        print "Cleaning", folder
+        print(("Cleaning", folder))
         os.remove(status_file)
 
 def clean_invalid_experiments(cfg, experiments):
@@ -38,14 +38,14 @@ def clean_invalid_experiments(cfg, experiments):
                and f != meta_file]
 
     if len(folders) == 0:
-        print "no invalid expfolders"
+        print("no invalid expfolders")
         return
 
-    print "Removing following folders: "
+    print("Removing following folders: ")
     for folder in folders:
-        print "\t", folder
+        print(("\t", folder))
     r = 'y'
-    print "sure? [y/N]"
+    print("sure? [y/N]")
     r = utils.getch()
     if r == 'y':
         for folder in folders:

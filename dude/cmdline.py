@@ -14,19 +14,32 @@ from . import __version__
 import os
 import sys
 import optparse
-import imp
-import utils
-import summary_backends
-import summary
-import args
-import core
-import expgen
-import execute
-import dimensions
-import filter as filt
-import clean
-import info
-import visit
+import importlib as imp
+from . import utils
+from . import summary_backends
+from . import summary
+from . import args
+from . import core
+from . import expgen
+from . import execute
+from . import dimensions
+from . import filter as filt
+from . import clean
+from . import info
+from . import visit
+
+import importlib.util
+import importlib.machinery
+
+def load_source(modname, filename):
+    loader = importlib.machinery.SourceFileLoader(modname, filename)
+    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
+    module = importlib.util.module_from_spec(spec)
+    # The module is always executed and not cached in sys.modules.
+    # Uncomment the following line to cache the module.
+    # sys.modules[module.__name__] = module
+    loader.exec_module(module)
+    return module
 
 desc = """Commands:
        clean\t\t delete experiments
@@ -143,9 +156,9 @@ def main(cargs):
     # use a given dudefile in options
     if options.expfile != None:
         try:
-            cfg = imp.load_source('', options.expfile)
+            cfg = load_source('', options.expfile)
         except IOError:
-            print >> sys.stderr, 'ERROR: Loading', options.expfile, 'failed'
+            print('ERROR: Loading', options.expfile, 'failed', file=sys.stderr)
             parser.print_help()
             sys.exit(1)
     else: # try default file names
@@ -156,8 +169,8 @@ def main(cargs):
             for f in ['desc.py', 'dudefile', 'Dudefile', 'dudefile.py']:
                 try:
                     if os.path.exists(f) and i > 0:
-                        print "Opening Dudefile: ", os.path.abspath(f)
-                    cfg = imp.load_source('', f)
+                        print("Opening Dudefile: ", os.path.abspath(f))
+                    cfg = load_source('', f)
                     break
                 except IOError:
                     pass
@@ -170,7 +183,7 @@ def main(cargs):
                 current = parent
 
         if cfg == None:
-            print >> sys.stderr, 'ERROR: no dudefile found'
+            print('ERROR: no dudefile found', file=sys.stderr)
             parser.print_help()
             sys.exit(1)
 
@@ -186,7 +199,7 @@ def main(cargs):
     # parse arguments to module
     if options.margs:
         margs = args.parse(";".join(options.margs))
-        print "Passing arguments:", margs
+        print("Passing arguments:", margs)
         args.set_args(cfg, margs)
 
     if hasattr(cfg, 'dude_version') and cfg.dude_version >= 3:
@@ -267,17 +280,17 @@ def main(cargs):
     elif cmd == 'list':
         for experiment in experiments:
             if options.dict:
-                print "experiment:", experiment
+                print("experiment:", experiment)
             else:
-                print core.get_folder(cfg, experiment)
+                print(core.get_folder(cfg, experiment))
     elif cmd == 'failed':
         failed = core.get_failed(cfg, experiments, False)
         for ffile in failed:
-            print ffile
+            print(ffile)
     elif cmd == 'missing':
         failed = core.get_failed(cfg, experiments, True)
         for exp in failed:
-            print exp
+            print(exp)
     elif cmd == 'clean':
         if options.invalid:
             clean.clean_invalid_experiments(cfg, experiments)
@@ -287,7 +300,7 @@ def main(cargs):
             r = 'y'
             if options.filter == None and \
                     options.filter_inline == None:
-                print "sure to wanna delete everything? [y/N]"
+                print("sure to wanna delete everything? [y/N]")
                 r = utils.getch() #raw_input("Skip, quit, or continue?
                               #[s/q/c]")
 
@@ -295,11 +308,11 @@ def main(cargs):
                 clean.clean_experiments(cfg, experiments)
     elif cmd == 'visit':
         if len(cargs) < 2:
-            print "Specify a bash command after visit"
+            print("Specify a bash command after visit")
             sys.exit(1)
         elif len(cargs) > 2:
-            print "Surround multi-term bash commands with \"\"."
-            print "e.g., \"%s\"" % ' '.join(cargs[1:])
+            print("Surround multi-term bash commands with \"\".")
+            print("e.g., \"%s\"" % ' '.join(cargs[1:]))
             sys.exit(1)
         visit.visit_cmd_experiments(cfg, experiments, cargs[1])
     elif cmd == 'info':
@@ -307,5 +320,5 @@ def main(cargs):
     elif cmd == 'status':
         info.print_status(cfg, experiments)
     else:
-        print >> sys.stderr, "ERROR: wrong command. %s" % cargs[0]
+        print("ERROR: wrong command. %s" % cargs[0], file=sys.stderr)
         parser.print_help()

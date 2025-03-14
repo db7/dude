@@ -3,7 +3,7 @@
 # See accompanying file LICENSE
 
 import re
-import utils
+from . import utils
 
 def parse(args):
     """ parse arguments in this format: \"option1=value;option2=[value3,value4]\"

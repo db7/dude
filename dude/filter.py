@@ -4,9 +4,9 @@
 
 """ """
 
-import core
+from . import core
 import os
-import utils
+from . import utils
 import re
 import sys
 
@@ -20,7 +20,7 @@ def filter_one(cfg, experiments, filter, invert, only_ran):
             os.chdir(folder)
             outf = open(core.outputFile)
             #outf.readline()
-            ret = filter(experiment, outf)
+            ret = list(filter(experiment, outf))
             if not invert and ret:
                 filtered_experiments.append( experiment )
             if invert and not ret:
@@ -36,7 +36,7 @@ def filter_one(cfg, experiments, filter, invert, only_ran):
                     #outf.readline()
                 else:
                     outf = None
-                ret = filter(experiment, outf)
+                ret = list(filter(experiment, outf))
                 if not invert and ret:
                     filtered_experiments.append( experiment )
                 if invert and not ret:
@@ -45,7 +45,7 @@ def filter_one(cfg, experiments, filter, invert, only_ran):
                 if outf: outf.close()
                 os.chdir(wd)
             else:
-                ret = filter(experiment, None)
+                ret = list(filter(experiment, None))
                 if not invert and ret:
                     filtered_experiments.append( experiment )
                 if invert and not ret:
@@ -87,16 +87,16 @@ def filter_tuple(cfg, f):
 
     # if dimension not in optspace, exit
     if key not in cfg.optspace:
-        print key, "does not belong to optspace"
-        print "dimensions:", ','.join(cfg.optspace.keys())
+        print((key, "does not belong to optspace"))
+        print(("dimensions:", ','.join(list(cfg.optspace.keys()))))
         sys.exit(1)
 
     # if value not in optspace, exit
     for v in value:
         keys = [str(i) for i in cfg.optspace[key]]
         if str(v) not in keys:
-            print v, "does not belong to dimension"
-            print "values:", ','.join(keys)
+            print((v, "does not belong to dimension"))
+            print(("values:", ','.join(keys)))
             sys.exit(1)
 
     return (key,value)

@@ -13,16 +13,16 @@ __author__ = 'Diogo Becker'
 __copyright__ ='2010, 2011, 2012'
 
 
-import args
-import clean
-import cmdline
-import core
-import dimensions
-import execute
-import expgen
-import filter
-import info
-import summaries
-import summary
-import summary_backends
-import utils
+from . import args
+from . import clean
+from . import cmdline
+from . import core
+from . import dimensions
+from . import execute
+from . import expgen
+from . import filter
+from . import info
+from . import summaries
+from . import summary
+from . import summary_backends
+from . import utils

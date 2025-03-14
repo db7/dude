@@ -6,11 +6,11 @@
 this module is about handling of dimensions
 '''
 
-import cPickle
+import pickle
 import os
 
-import clean
-import core
+from . import clean
+from . import core
 
 META_FILE = 'dude.meta'
 
@@ -28,7 +28,7 @@ class MetaData:
 
         meta_tmp = 'meta-%d.tmp' % os.getpid()
         with open(os.path.join(raw_folder, meta_tmp), 'wb') as meta_file:
-            cPickle.dump(self, meta_file, cPickle.HIGHEST_PROTOCOL)
+            pickle.dump(self, meta_file, pickle.HIGHEST_PROTOCOL)
             os.fsync(meta_file)
 
         os.rename(os.path.join(raw_folder, meta_tmp),
@@ -47,7 +47,7 @@ def read_meta(cfg):
     try:
         meta_file = open(os.path.join(core.get_raw_folder(cfg), META_FILE), 'rb')
 
-        return cPickle.load(meta_file)
+        return pickle.load(meta_file)
     except IOError:
         # ignore
         return None
@@ -68,7 +68,7 @@ def should_del_exp(experiment, default_values):
     '''
 
     delete = False
-    for key, value in default_values.iteritems():
+    for key, value in list(default_values.items()):
         if experiment[key] != value:
             delete = True
             break
@@ -82,8 +82,8 @@ def read_default(cfg, dimensions, text):
 
     default_values = {}
     for dim in dimensions:
-        value = raw_input(text + ' "' + str(dim) + '" ' + \
-                              str(cfg.optspace[dim]) + ': ')
+        value = eval(input(text + ' "' + str(dim) + '" ' + \
+                              str(cfg.optspace[dim]) + ': '))
         casted_value = type(cfg.optspace[dim][0])(value)
         assert casted_value in cfg.optspace[dim]
         default_values[dim] = casted_value
@@ -99,19 +99,19 @@ def update(cfg):
     saved_meta_data = read_meta(cfg)
 
     if saved_meta_data is not None:
-        cfg.optspace.keys().sort()
+        list(cfg.optspace.keys()).sort()
 
-        additional_dimensions = list_difference(cfg.optspace.keys(),
-                                                saved_meta_data.optspace.keys())
-        removed_dimensions = list_difference(saved_meta_data.optspace.keys(),
-                                             cfg.optspace.keys())
+        additional_dimensions = list_difference(list(cfg.optspace.keys()),
+                                                list(saved_meta_data.optspace.keys()))
+        removed_dimensions = list_difference(list(saved_meta_data.optspace.keys()),
+                                             list(cfg.optspace.keys()))
 
         if len(additional_dimensions) > 0 or len(removed_dimensions) > 0:
             add_default_values = {}
             if len(additional_dimensions) > 0:
                 # an additional dimension is detected
-                print 'the following dimensions are detected to be added:', \
-                    str(additional_dimensions)
+                print(('the following dimensions are detected to be added:', \
+                    str(additional_dimensions)))
                 old_experiments = core.get_experiments(saved_meta_data)
                 add_default_values = \
                     read_default(cfg, additional_dimensions,
@@ -120,8 +120,8 @@ def update(cfg):
             rem_default_values = {}
             if len(removed_dimensions) > 0:
                 # a dimension removal is detected
-                print 'the following dimensions are detected to be removed:', \
-                    str(removed_dimensions)
+                print(('the following dimensions are detected to be removed:', \
+                    str(removed_dimensions)))
                 old_experiments = core.get_experiments(saved_meta_data)
                 rem_default_values = \
                     read_default(saved_meta_data,

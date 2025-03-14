@@ -6,21 +6,21 @@ optpt = {'a': 1, 'b' : 'x'}
 
 s = dude.summaries.LineSelect("test", header = "bla_col")
 f = open('bla.txt')
-print s.header(optpt.keys())
+print((s.header(list(optpt.keys()))))
 s.visit(optpt, f, sys.stdout)
-print "----------"
+print("----------")
 
 s = dude.summaries.FilesLineSelect("test", files='bla.*', header = 'val')
 f = open('/dev/null')
-print s.header(optpt.keys())
+print((s.header(list(optpt.keys()))))
 s.visit(optpt, f, sys.stdout)
-print "----------"
+print("----------")
 
 s = dude.summaries.FilesLineSelect("test", files=['bla.*'], header = 'val')
 f = open('/dev/null')
-print s.header(optpt.keys())
+print((s.header(list(optpt.keys()))))
 s.visit(optpt, f, sys.stdout)
-print "----------"
+print("----------")
 
 s = dude.summaries.MultiLineSelect(
     "test", 
@@ -30,9 +30,9 @@ s = dude.summaries.MultiLineSelect(
         ]
     )
 f = open('bla.txt')
-print s.header(optpt.keys())
+print((s.header(list(optpt.keys()))))
 s.visit(optpt, f, sys.stdout)
-print "----------"
+print("----------")
 
 s = dude.summaries.FilesMultiLineSelect(
     "test",
@@ -43,9 +43,9 @@ s = dude.summaries.FilesMultiLineSelect(
         ]
     )
 f = open('/dev/null')
-print s.header(optpt.keys())
+print((s.header(list(optpt.keys()))))
 s.visit(optpt, f, sys.stdout)
-print "----------"
+print("----------")
 
 s = dude.summaries.FilesMultiLineSelect(
     "test",
@@ -56,6 +56,6 @@ s = dude.summaries.FilesMultiLineSelect(
         ]
     )
 f = open('/dev/null')
-print s.header(optpt.keys())
+print((s.header(list(optpt.keys()))))
 s.visit(optpt, f, sys.stdout)
-print "----------"
+print("----------")
